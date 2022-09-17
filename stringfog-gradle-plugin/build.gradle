@@ -7,7 +7,7 @@ dependencies {
     implementation localGroovy()
     implementation 'com.android.tools.build:gradle:3.3.0'
     implementation 'org.ow2.asm:asm:9.2'
-    implementation 'com.squareup:javapoet:1.9.0'
+    implementation 'com.squareup:javapoet:1.10.0'
     implementation project(':stringfog-interface')
 }
 
@@ -29,11 +29,24 @@ version=VERSION
 
 [compileJava, compileGroovy, javadoc]*.options*.encoding = 'UTF-8'
 
+task sourceJar(type: Jar) {
+    duplicatesStrategy = DuplicatesStrategy.EXCLUDE
+    archiveClassifier.set("sources")
+    from sourceSets.main.allSource
+}
+
 publishing {
-    repositories {
-        maven {
-            url = uri('../maven')
+    publications {
+        Java(MavenPublication) {
+            groupId = 'io.github.stringfog'
+            artifactId = 'gradle-plugin'
+            version = "3.0.0"
+            from components.java
+            artifact sourceJar
         }
+    }
+    repositories {
+        mavenLocal()
     }
 }
 

@@ -64,6 +64,17 @@ import java.io.IOException;
             return;
         }
         try {
+            if (mWriter == null) {
+                if (mMappingFile.exists() && !mMappingFile.delete()) {
+                    throw new IOException("delete stringfog mappingFile failed");
+                }
+                File dir = mMappingFile.getParentFile();
+                if (dir.exists() || dir.mkdirs()) {
+                    mWriter = new BufferedWriter(new FileWriter(mMappingFile));
+                } else {
+                    throw new IOException("Failed to create dir: " + dir.getPath());
+                }
+            }
             if (!className.equals(mCurrentClassName)) {
                 mWriter.newLine();
                 mWriter.write("[" + className + "]");

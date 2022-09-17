@@ -6,8 +6,8 @@ dependencies {
     implementation project(':stringfog-interface')
 }
 
-targetCompatibility = '1.7'
-sourceCompatibility = '1.7'
+targetCompatibility = JavaVersion.VERSION_11
+sourceCompatibility = JavaVersion.VERSION_11
 
 group=GROUP
 archivesBaseName=ARTIFACTID
@@ -15,11 +15,24 @@ version=VERSION
 
 [compileJava, compileTestJava, javadoc]*.options*.encoding = 'UTF-8'
 
+task sourceJar(type: Jar) {
+    duplicatesStrategy = DuplicatesStrategy.EXCLUDE
+    archiveClassifier.set("sources")
+    from sourceSets.main.allSource
+}
+
 publishing {
-    repositories {
-        maven {
-            url = uri("$rootDir/maven")
+    publications {
+        Java(MavenPublication) {
+            groupId = 'io.github.stringfog'
+            artifactId = 'xor'
+            version = "3.0.0"
+            from components.java
+            artifact sourceJar
         }
+    }
+    repositories {
+        mavenLocal()
     }
 }
 
