@@ -1,8 +1,9 @@
 apply plugin: 'java-library'
-apply plugin: 'maven'
+apply plugin: 'maven-publish'
+//apply plugin: "com.vanniktech.maven.publish"
 
 dependencies {
-    api project(':stringfog-interface')
+    implementation project(':stringfog-interface')
 }
 
 targetCompatibility = '1.7'
@@ -14,10 +15,10 @@ version=VERSION
 
 [compileJava, compileTestJava, javadoc]*.options*.encoding = 'UTF-8'
 
-uploadArchives {
+publishing {
     repositories {
-        mavenDeployer {
-            repository(url: uri("$rootDir/maven"))
+        maven {
+            url = uri("$rootDir/maven")
         }
     }
 }
